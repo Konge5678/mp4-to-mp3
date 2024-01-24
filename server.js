@@ -1,11 +1,13 @@
 const express = require('express');
-const multer = require('multer');
-const ffmpeg = require('fluent-ffmpeg');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
+const ffmpeg = require('fluent-ffmpeg');
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
+
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -28,7 +30,7 @@ app.post('/upload', upload.single('video'), (req, res) => {
           return res.status(500).send('Error downloading file.');
         }
 
-        // Delete the files after download
+      
         fs.unlink(mp4File, (err) => {
           if (err) console.error('Error deleting MP4 file: ', err);
         });
