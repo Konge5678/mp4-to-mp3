@@ -11,7 +11,7 @@ Follow these steps to run the project:
 1. **Clone the repository:** Use the following command to clone the repository to your local machine:
 
     ```bash
-    git clone <repository-url>
+    git clone <https://github.com/Konge5678/mp4-to-mp3.git>
     ```
 
 2. **Install the dependencies:** Navigate to the project directory and install the necessary dependencies with the following command:
