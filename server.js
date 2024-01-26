@@ -6,6 +6,7 @@ const ffmpeg = require('fluent-ffmpeg');
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
+const PORT = process.env.PORT || 3030;
 
 app.use(express.static('public'));
 
@@ -30,7 +31,6 @@ app.post('/upload', upload.single('video'), (req, res) => {
           return res.status(500).send('Error downloading file.');
         }
 
-      
         fs.unlink(mp4File, (err) => {
           if (err) console.error('Error deleting MP4 file: ', err);
         });
@@ -38,12 +38,9 @@ app.post('/upload', upload.single('video'), (req, res) => {
           if (err) console.error('Error deleting MP3 file: ', err);
         });
       });
-    })
-    .on('error', (err) => {
-      console.error('Error converting file: ', err);
-      return res.status(500).send('Error converting file.');
-    })
-    .run();
+    });
 });
 
-app.listen(3000, () => console.log('Server started on port 3000'));
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});
