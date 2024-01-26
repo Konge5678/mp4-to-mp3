@@ -11,6 +11,15 @@ app.use(express.static('public'));
 
 const upload = multer({ dest: 'uploads/' });
 
+let clients = [];
+
+app.get('/progress', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  clients.push(res);
+});
+
 app.post('/upload', upload.single('video'), (req, res) => {
   if (!req.file) {
     console.log('No file uploaded');
@@ -32,6 +41,9 @@ app.post('/upload', upload.single('video'), (req, res) => {
     })
     .on('progress', (progress) => {
       console.log('Processing: ' + progress.percent + '% done');
+      clients.forEach((clientRes) => {
+        clientRes.write(`data: ${progress.percent}\n\n`);
+      });
     })
     .on('error', (err) => {
       console.error('Error occurred during conversion: ', err);
@@ -51,6 +63,8 @@ app.post('/upload', upload.single('video'), (req, res) => {
         fs.unlink(mp3File, (err) => {
           if (err) console.error('Error deleting MP3 file: ', err);
         });
+
+        clients = [];
       });
     })
     .run();

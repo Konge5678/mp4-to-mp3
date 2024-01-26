@@ -1,35 +1,35 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-  const form = document.querySelector('form');
+  document.querySelector('#file').addEventListener('change', (event) => {
+    const file = event.target.files[0];
 
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
+    if (file) {
+      const formData = new FormData();
+      formData.append('video', file);
 
-    const fileInput = document.querySelector('input[type="file"]');
-    const file = fileInput.files[0];
-
-    if (!file) {
-      alert('No file selected');
-      return;
+      fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(() => {
+        const source = new EventSource('/progress');
+source.onmessage = (event) => {
+  const percentage = event.data;
+  const progressBar = document.querySelector('.progress-bar');
+  progressBar.style.width = `${percentage}%`;
+};
+      })
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'audio.mp3';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => console.error(error));
     }
-
-    const formData = new FormData();
-    formData.append('video', file);
-
-    fetch('/upload', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.blob())
-    .then(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = 'audio.mp3';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    })
-    .catch(error => console.error(error));
   });
 });

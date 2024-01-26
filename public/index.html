@@ -10,10 +10,16 @@
   <h1>Mp4-Mp3 Converter</h1>
   <div class="container">
     <form action="/upload" method="post" enctype="multipart/form-data">
-      <input class="choose-file" type="file" name="video" accept="video/mp4">
+      <input id="file" type="file" name="video" accept="video/mp4">
       <input type="submit" value="Upload">
     </form>
+    <div class="progress-container">
+        <div class="progress-bar" style="width: 0%;"></div>
+      </div>
   </div>
+  
+
+ 
 
   <script src="main.js"></script>
   
