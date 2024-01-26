@@ -30,6 +30,9 @@ app.post('/upload', upload.single('video'), (req, res) => {
     .on('start', () => {
       console.log('Conversion started');
     })
+    .on('progress', (progress) => {
+      console.log('Processing: ' + progress.percent + '% done');
+    })
     .on('error', (err) => {
       console.error('Error occurred during conversion: ', err);
       return res.status(500).send('Error occurred during conversion.');
@@ -49,9 +52,10 @@ app.post('/upload', upload.single('video'), (req, res) => {
           if (err) console.error('Error deleting MP3 file: ', err);
         });
       });
-    });
+    })
+    .run();
 });
 
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
