@@ -7,9 +7,7 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3030;
 
-app.get('/', (req, res) => {
-  res.send('Hello, world!');
-});
+app.use(express.static('public'));
 
 const upload = multer({ dest: 'uploads/' });
 
