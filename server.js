@@ -24,7 +24,15 @@ app.post('/upload', upload.single('video'), (req, res) => {
 
   ffmpeg(mp4File)
     .output(mp3File)
+    .on('start', () => {
+      console.log('Conversion started');
+    })
+    .on('error', (err) => {
+      console.error('Error occurred during conversion: ', err);
+      return res.status(500).send('Error occurred during conversion.');
+    })
     .on('end', () => {
+      console.log('Conversion ended');
       res.download(mp3File, (err) => {
         if (err) {
           console.error('Error downloading file: ', err);
