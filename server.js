@@ -7,6 +7,10 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3030;
 
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+
 const upload = multer({ dest: 'uploads/' });
 
 app.post('/upload', upload.single('video'), (req, res) => {
